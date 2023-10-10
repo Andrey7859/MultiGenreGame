@@ -239,11 +239,13 @@ class Parser:
 			self.__getTilesFromTileset(self.terrainLayer[0], path[2], (8, 16), 1)
 			self.__getTilesFromTileset(self.terrainLayer[1], path[3], (1, 1), 128)
 			self.__getTilesFromTileset(self.terrainLayer[2], path[5], (1, 1), 777777)
+			self.__getTilesFromTileset(self.terrainLayer[3], path[7], (1, 1), 888888)
 		# creating map from the file
 		self.terrainLayer[0].loadlayer()
 		self.terrainLayer[1].loadlayer()
 		self.terrainLayer[2].loadlayer()
-		
+		self.terrainLayer[3].loadlayer()
+
 	def parceTMX(self, path):
 		# creating [id] = [image's path] dictionary
 		self.__getTerrainIDs(path)
@@ -330,7 +332,7 @@ class Level:
 			self.shooterLoader(self.terrainLayer[0])
 
 		if (config.currentLevel == LevelEnum.Platformer.value):
-			self.terrainLayer = [Layer(path[0]), Layer(path[1]), Layer(path[4])]
+			self.terrainLayer = [Layer(path[0]), Layer(path[1]), Layer(path[4]), Layer(path[6])]
 			
 			self.parser = Parser(self.terrainLayer, self.assetMngr)
 			self.parser.mainParcer(path)
@@ -338,6 +340,7 @@ class Level:
 			self.platformerLoader(self.terrainLayer[0])
 			self.platformerLoader(self.terrainLayer[1])
 			self.platformerLoader(self.terrainLayer[2])
+			self.platformerLoader(self.terrainLayer[3])
 
 	def strategyLoader(self, layer, scale= 1):
 		for row_index, row in enumerate(layer.map):
@@ -376,12 +379,15 @@ class Level:
 
 				if (col in layer.tilesDict.keys()) and col == '777777':
 					self.tiles.append(Tile(self.assetMngr, (x,y), TileEnum.Portal.value, layer.tilesDict.get(col)))
+				
+				if (col in layer.tilesDict.keys()) and col == '888888':
+					self.tiles.append(Tile(self.assetMngr, (x,y), TileEnum.Buff.value, layer.tilesDict.get(col)))
 
 				if (col in layer.tilesDict.keys()) and col == '128':
 					self.tiles.append(Tile(self.assetMngr, (x,y), TileEnum.Coin.value, layer.tilesDict.get(col)))
 					InfoLogger.info("Coin at the position: " + str(x) + ' ' + str(y))
 				
-				if (col in layer.tilesDict.keys()) and col != '128' and col != '777777':
+				if (col in layer.tilesDict.keys()) and col != '128' and col != '777777' and col != '888888':
 					self.tiles.append(Tile(self.assetMngr, (x,y), TileEnum._None.value, layer.tilesDict.get(col)))
 									
 

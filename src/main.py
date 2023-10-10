@@ -367,7 +367,7 @@ class Game():
                 if(self.isLevelInit == False):
                     self.level = Level(self.assetMngr, self.publisher)
                     self.player = Player(self.level.tiles, self.publisher)
-                    arrPath = ["maps/platformer/Platformer.txt", "maps/platformer/LayerCoins.txt", "media/Platformer/img/Environment/Tileset2.png", "media/Platformer/img/coin_1.png", "maps/platformer/LayerPortal.txt", "media/Platformer/img/Objects/portal.png"]
+                    arrPath = ["maps/platformer/Platformer.txt", "maps/platformer/LayerCoins.txt", "media/Platformer/img/Environment/Tileset2.png", "media/Platformer/img/coin_1.png", "maps/platformer/LayerPortal.txt", "media/Platformer/img/Objects/portal.png", "maps/platformer/LayerBuff.txt", "media/Platformer/img/Objects/Buff.png" ]
                     self.level.setup_level(self.player, arrPath)
                     self.camera = CameraGroup(self.level, self.player)
                     self.loadProgress()

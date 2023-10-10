@@ -1,5 +1,7 @@
 import pygame
 import config
+import threading
+import time
 from config import *
 
 class Player(pygame.sprite.Sprite):
@@ -19,6 +21,7 @@ class Player(pygame.sprite.Sprite):
 
 		self.health = 100
 		self.damage = 34
+		self.isBuff = 0
 
 		# player movement 
 		self.direction = pygame.math.Vector2()
@@ -85,6 +88,13 @@ class Player(pygame.sprite.Sprite):
 				if(sprite.objType == TileEnum.Portal.value and (len(enemies.getAllEnemies()) < 1)):
 					config.gameState = config.UIEnum.Main_menu.value
 
+				if(sprite.objType == TileEnum.Buff.value):
+					self.world.getArr().remove(sprite)
+					print('Touch BUFF!')
+					self.changeable_metrics()
+					timer_flow = threading.Thread(target = self.timer)
+					timer_flow.start()		 
+
 		for enemy in enemies.getAllEnemies():
 			if enemy.rect.colliderect(self.rect):
 				if(enemy.objType == TileEnum.Enemies.value):
@@ -133,6 +143,20 @@ class Player(pygame.sprite.Sprite):
 	def checkHeroFalling(self):
 		if(self.rect.y > HEIGHT * 1.25):
 			config.gameState = UIEnum.GameOver.value
+		
+	def changeable_metrics(self):
+		self.health += 50
+		self.damage += 20
+
+	def timer(self):
+		time.sleep(10)
+		self.isBuff = 1
+
+	def debuff(self):
+		if(self.isBuff == 1):
+			self.isBuff = 0
+			self.damage = 34
+			print("Debuff happend")
 
 	def rulesOfTheGame(self):
 		if(self.health < 1):
@@ -147,11 +171,14 @@ class Player(pygame.sprite.Sprite):
 			self.move(dt, enemies)
 			self.checkHeroFalling()
 			self.rulesOfTheGame()
-					
+			self.debuff()
+		#print(self.health, self.damage)
+				
 		if(currentLevel == LevelEnum.Strategy.value):
 			# if(self.isMoving[1] == True):
 			# 	self.rect.y += self.direction.y * self.speed * dt
 			pass
+
 
 	def draw(self, offset):
 		offset_posP = self.rect.topleft - offset
